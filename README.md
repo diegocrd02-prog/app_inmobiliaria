@@ -113,8 +113,8 @@ Antes de instalar el proyecto, asegúrate de tener instalado:
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/usuario/nombre-del-repositorio.git
-cd nombre-del-repositorio
+git clone https://github.com/diegocrd02-prog/app_inmobiliaria
+cd app_inmobiliaria
 ```
 
 Sustituye `usuario/nombre-del-repositorio` por la URL real del repositorio.
