@@ -117,8 +117,6 @@ git clone https://github.com/diegocrd02-prog/app_inmobiliaria
 cd app_inmobiliaria
 ```
 
-Sustituye `usuario/nombre-del-repositorio` por la URL real del repositorio.
-
 ### 2. Crear entorno virtual
 
 En Windows:
