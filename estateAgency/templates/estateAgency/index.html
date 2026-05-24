@@ -1,0 +1,79 @@
+{% extends 'estateAgency/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="hero">
+  <p class="eyebrow">Proyecto Intermodular DAW</p>
+  <h2>Analiza el mercado inmobiliario con datos reales</h2>
+  <p class="hero-text">
+    Consulta anuncios importados, compara precios por ciudad y detecta oportunidades
+    de compra, alquiler estable o alquiler de temporada.
+  </p>
+
+  <div class="search-box">
+    <select id="type">
+      <option value="sale">Compra</option>
+      <option value="rent_long">Alquiler larga estancia</option>
+      <option value="rent_short">Alquiler de temporada</option>
+    </select>
+
+    <select id="city">
+        {% for location in locations %}
+          <option value="{{ location.city }}">{{ location.city }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="button" onclick="predict()">Analizar mercado</button>
+  </div>
+
+  <div class="prediction" id="result"></div>
+</section>
+
+<section class="section">
+  <div class="section-heading">
+    <p class="eyebrow">Funcionalidades</p>
+    <h1>Analiza viviendas en tiempo real</h1>
+    <p>La aplicacion combina scraping, base de datos, visualizacion de datos y analisis por vivienda.</p>
+  </div>
+
+  <div class="cards">
+    <a class="card feature-card-link" href="{% url 'estateAgency:properties' %}?type=sale">
+      <img src="{% static 'estateAgency/img/feature-buy.jpg' %}" alt="Vivienda en venta">
+      <div class="card-content">
+        <div class="card-tags">
+          <span>Compra</span>
+          <span>Precio/m2</span>
+        </div>
+        <h3>Comparativa de compra</h3>
+        <p>Analiza viviendas en venta, precios medios y diferencias por metro cuadrado.</p>
+      </div>
+    </a>
+
+    <a class="card feature-card-link" href="{% url 'estateAgency:properties' %}?type=rent_long">
+      <img src="{% static 'estateAgency/img/feature-rent.jpg' %}" alt="Vivienda en alquiler">
+      <div class="card-content">
+        <div class="card-tags">
+          <span>Alquiler</span>
+          <span>Mensual</span>
+        </div>
+        <h3>Alquiler de larga estancia</h3>
+        <p>Consulta inmuebles orientados a estabilidad mensual y demanda sostenida.</p>
+      </div>
+    </a>
+
+    <a class="card feature-card-link" href="{% url 'estateAgency:properties' %}?type=rent_short">
+      <img src="{% static 'estateAgency/img/feature-season.jpg' %}" alt="Vivienda de temporada">
+      <div class="card-content">
+        <div class="card-tags">
+          <span>Temporada</span>
+          <span>Analisis</span>
+        </div>
+        <h3>Alquiler de temporada</h3>
+        <p>Explora anuncios con enfoque temporal y prepara visualizaciones especificas.</p>
+      </div>
+    </a>
+  </div>
+</section>
+
+{% endblock %}

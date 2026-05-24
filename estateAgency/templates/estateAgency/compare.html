@@ -1,0 +1,79 @@
+{% extends "estateAgency/base.html" %}
+{% load static %}
+{% load currency %}
+{% block title %}Comparador de viviendas | Predicciones Inmobiliarias{% endblock %}
+
+{% block content %}
+
+<section class="section compare-section">
+  <div class="section-heading">
+    <p class="eyebrow">Comparador inteligente</p>
+    <h1>Recomendacion entre viviendas</h1>
+    <p>La puntuacion combina precio por metro cuadrado, superficie, habitaciones y diferencia frente a la media de zona cuando existe estadistica disponible.</p>
+  </div>
+
+  <article class="recommendation-panel">
+    <p>{{ conclusion }}</p>
+  </article>
+
+  {% if items %}
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Vivienda</th>
+            <th>Operacion</th>
+            <th>Precio</th>
+            <th>m2</th>
+            <th>EUR/m2</th>
+            <th>Habitaciones</th>
+            <th>Baños</th>
+            <th>Media zona</th>
+            <th>Puntuacion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+            <tr class="{% if best and item.id == best.id %}best-row{% endif %}">
+              <td>
+                <div class="compare-home">
+                  <img src="{{ item.image_url }}" alt="{{ item.title }}">
+                  <div>
+                    <strong>{{ item.title }}</strong>
+                    <span>{{ item.city }}</span>
+                    <a href="{% url 'estateAgency:property_detail' item.id %}?image={{ item.image_url|urlencode }}">Ver ficha</a>
+                  </div>
+                </div>
+              </td>
+              <td>{{ item.operation_label }}</td>
+              <td>{{ item.price|eur }} EUR </td>
+              <td>{{ item.size_m2|floatformat:0 }}</td>
+              <td>{{ item.price_per_m2|floatformat:0 }} EUR/m2</td>
+              <td>{{ item.rooms|default:"-" }}</td>
+              <td>{{ item.bathrooms|default:"-" }}</td>
+              <td>
+                {% if item.market_avg_m2 %}
+                  {{ item.market_avg_m2|floatformat:0 }} EUR/m2
+                  {% if item.market_delta_pct %}
+                    <span class="{% if item.market_delta_pct > 0 %}positive-delta{% else %}negative-delta{% endif %}">
+                      {{ item.market_delta_pct|floatformat:1 }}%
+                    </span>
+                  {% endif %}
+                {% else %}
+                  Sin dato
+                {% endif %}
+              </td>
+              <td><strong>{{ item.score|floatformat:1 }}/100</strong></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+
+  <div class="detail-actions compare-actions">
+    <a href="{% url 'estateAgency:properties' %}">Volver a resultados</a>
+  </div>
+</section>
+
+{% endblock %}

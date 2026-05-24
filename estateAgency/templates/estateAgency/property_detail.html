@@ -1,0 +1,73 @@
+{% extends "estateAgency/base.html" %}
+{% load static %}
+{% load currency %}
+{% block title %}{{ property.title }} | Predicciones Inmobiliarias{% endblock %}
+
+{% block content %}
+
+<section class="detail-hero">
+  <div class="detail-image">
+    <img src="{{ property.image_url }}" alt="{{ property.title }}">
+  </div>
+
+  <article class="detail-summary">
+    <p class="eyebrow">{{ operation_label }}</p>
+    <h1>{{ property.title }}</h1>
+
+    {% if latest_listing %}
+      <div class="detail-price">{{ latest_listing.price|eur }} EUR</div>
+    {% endif %}
+
+    <p>
+      Vivienda situada en {{ property.location.city }}{% if property.location.province %}, {{ property.location.province }}{% endif %}.
+      Esta ficha utiliza los datos importados en la base de datos para generar un analisis individual.
+    </p>
+
+    <div class="card-tags detail-tags">
+      <span>{{ property.location.city }}</span>
+      <span>{{ property.size_m2|floatformat:0 }} m2</span>
+      <span>{{ property.rooms|default:"-" }} habitaciones</span>
+      {% if latest_listing and latest_listing.price_per_m2 %}
+        <span>{{ latest_listing.price_per_m2|floatformat:0 }} EUR/m2</span>
+      {% endif %}
+    </div>
+
+    <div class="detail-actions">
+      <a href="{% url 'estateAgency:properties' %}?type={{ selected_type }}&city={{ property.location.city }}">Volver a resultados</a>
+      {% if property.url %}
+        <a href="{{ property.url }}" target="_blank" rel="noopener">Ver fuente original</a>
+      {% endif %}
+    </div>
+  </article>
+</section>
+
+<section class="detail-grid">
+  <article class="detail-panel">
+    <p class="eyebrow">Ficha tecnica</p>
+    <h2>Caracteristicas</h2>
+    <div class="feature-list">
+      <span>Operacion: {{ operation_label }}</span>
+      <span>Tipo: {{ property.property_type }}</span>
+      <span>Metros: {{ property.size_m2|floatformat:0 }} m2</span>
+      <span>Habitaciones: {{ property.rooms|default:"-" }}</span>
+      <span>Baños: {{ property.bathrooms|default:"-" }}</span>
+      <span>Fuente: {{ property.source.name }}</span>
+    </div>
+  </article>
+
+  <article class="detail-panel">
+    <p class="eyebrow">Historico real</p>
+    <h2 id="detailChartTitle">Evolucion del anuncio</h2>
+    <canvas id="propertyDetailChart"></canvas>
+    <p class="chart-note">
+      Si el scraping vuelve a importar el mismo anuncio, esta grafica mostrara la evolucion del precio por fecha.
+    </p>
+  </article>
+</section>
+
+<script>
+  window.detailChartData = JSON.parse('{{ chart_data|escapejs }}');
+  window.detailSelectedType = "{{ selected_type }}";
+</script>
+
+{% endblock %}

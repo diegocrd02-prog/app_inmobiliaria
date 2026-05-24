@@ -1,0 +1,63 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Predicciones Inmobiliarias{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'estateAgency/css/styles.css' %}?v=4">
+</head>
+
+<body>
+<input type="hidden" id="isPropertyDatabaseEmpty" value="{{ isPropertyDatabaseEmpty|yesno:'true,false' }}">
+
+<div id="empty-scraping-popup">
+    Creando base de datos con anuncios reales...<br>
+    Esto puede tardar unos minutos.<br>
+    La aplicación puede estar limitada temporalmente.
+</div>
+
+<div id="scraping-popup" class="scraping-popup hidden">
+  <div class="scraping-popup-header">
+    <span>⚠️ Aviso</span>
+    <button type="button" id="scraping-popup-close">×</button>
+  </div>
+
+  <div class="scraping-popup-body">
+    Creando base de datos con anuncios reales...<br>
+    Esto puede tardar unos minutos.<br>
+    Algunas funciones pueden estar limitadas.
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+
+<header>
+  <a class="brand" href="{% url 'estateAgency:index' %}">
+    <span class="brand-mark">PI</span>
+    <span>
+      <strong>Predicciones Inmobiliarias</strong>
+      <small>Analisis del mercado con datos reales</small>
+    </span>
+  </a>
+  <nav class="top-nav">
+    <a href="{% url 'estateAgency:index' %}">Inicio</a>
+    <a href="{% url 'estateAgency:properties' %}?type=sale">Compra</a>
+    <a href="{% url 'estateAgency:properties' %}?type=rent_long">Alquiler</a>
+    <a href="{% url 'estateAgency:properties' %}?type=rent_short">Temporada</a>
+  </nav>
+</header>
+
+{% block content %}
+{% endblock %}
+
+<footer>
+  <p>&copy; 2026 Predicciones Inmobiliarias</p>
+  <p>Proyecto Intermodular DAW</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'estateAgency/js/script.js' %}?v=4"></script>
+</body>
+</html>

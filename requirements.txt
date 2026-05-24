@@ -1,0 +1,6 @@
+Django==6.0.4
+mysqlclient>=2.2,<3
+requests>=2.31,<3
+beautifulsoup4>=4.12,<5
+lxml>=5,<7
+playwright>=1.42,<2

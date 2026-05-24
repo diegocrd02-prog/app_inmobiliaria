@@ -1,0 +1,88 @@
+{% extends "estateAgency/base.html" %}
+{% load static %}
+{% load currency %}
+{% block content %}
+
+<section class="section results-section">
+  <div class="section-heading">
+    <p class="eyebrow">Resultados filtrados</p>
+    <h1>{% if selected_type == "sale" %}Compra{% elif selected_type == "rent_short" %}Alquiler de temporada{% else %}Alquiler de larga estancia{% endif %}{% if selected_city %} en {{ selected_city }}{% endif %}</h1>
+    <p>Analisis generado con los anuncios almacenados en la base de datos.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <span>Precio medio</span>
+      <strong>{{ market_summary.avg_price|eur|default:"0" }} EUR</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Precio medio/m2</span>
+      <strong>{{ market_summary.avg_price_m2|eur|default:"0" }} EUR/m2</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Anuncios analizados</span>
+      <strong>{{ market_summary.total|default:0 }}</strong>
+    </div>
+  </div>
+
+  <div class="charts">
+    <div class="chart-card">
+      <h2 id="priceChartTitle">Precios por vivienda</h2>
+      <canvas id="grafico"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h2>Precio por metro cuadrado</h2>
+      <canvas id="graficoM2"></canvas>
+    </div>
+  </div>
+
+  <form action="{% url 'estateAgency:compare_properties' %}" method="get">
+    <div class="comparison-bar">
+      <div>
+        <strong>Comparar viviendas</strong>
+        <span>Selecciona dos o mas opciones para recibir una recomendacion.</span>
+      </div>
+      <button type="submit">Comparar seleccionadas</button>
+    </div>
+
+    <div class="cards">
+      {% for p in properties %}
+      <article class="card property-card">
+        <label class="compare-selector">
+          <input type="checkbox" name="selected_ids" value="{{ p.id }}">
+          <span>Comparar</span>
+        </label>
+        <a class="property-card-link" href="{% url 'estateAgency:property_detail' p.id %}?image={{ p.image_url|urlencode }}">
+          <img src="{{ p.image_url }}" alt="{{ p.title }}">
+          <div class="card-content">
+            <div class="card-tags">
+              <span>{% if selected_type == "sale" %}Compra{% elif selected_type == "rent_short" %}Temporada{% else %}Alquiler largo{% endif %}</span>
+              <span>{{ p.city }}</span>
+            </div>
+            <h3>{{ p.title }}</h3>
+            <div class="property-facts">
+              <span>{{ p.price|eur }} EUR</span>
+              <span>{{ p.size_m2|floatformat:0 }} m2</span>
+              <span>{{ p.rooms|default:"-" }} hab.</span>
+              <span>{{ p.price_per_m2|default:0|floatformat:0 }} EUR/m2</span>
+            </div>
+            <strong class="card-action">Ver analisis de la vivienda</strong>
+          </div>
+        </a>
+      </article>
+      {% empty %}
+        <p class="empty-state">No hay propiedades para estos filtros.</p>
+      {% endfor %}
+    </div>
+  </form>
+</section>
+
+<script>
+  window.chartData = JSON.parse('{{ chart_data|escapejs }}');
+  window.selectedType = "{{ selected_type }}";
+</script>
+
+{% endblock %}
